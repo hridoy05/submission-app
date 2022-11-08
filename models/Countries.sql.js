@@ -1,22 +1,22 @@
 const {Sequelize, DataTypes} = require('sequelize')
 const sequelize = require('../db/connect')
 
-const Country = sequelize.define('country',{
+const Countries = sequelize.define('Countries',{
     id:{
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    name: {
+    country_code: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    code: {
+    country_name: {
         type: DataTypes.STRING,
         allowNull: false
-    },
+    }
    
-})
+}, {timestamps: false})
 
-module.exports = Country
+module.exports = Countries

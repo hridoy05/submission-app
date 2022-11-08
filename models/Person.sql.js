@@ -23,8 +23,8 @@ const Person = sequelize.define('person',{
     resumeUrl: {
         type: DataTypes.STRING,
         allowNull: false
-    }
+    },
 
-})
+},{ tableName: 'Person'})
 
 module.exports = Person

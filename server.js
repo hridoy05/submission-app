@@ -8,7 +8,7 @@ const server = http.createServer(app)
 async function startServer (){
    try{
      let res = await sequelize.sync()
-     console.log(res);
+     console.log(res.models);
     server.listen(PORT, ()=> {
         console.log(`listening on port ${PORT}..`);
     })
