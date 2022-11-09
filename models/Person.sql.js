@@ -13,7 +13,7 @@ const Person = sequelize.define('person',{
         allowNull: false
     },
     dob: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.STRING,
         allowNull: false
     },
     country: {
