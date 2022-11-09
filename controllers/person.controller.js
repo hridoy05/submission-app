@@ -1,4 +1,4 @@
-const { getAllInformation, addNewInformation } = require("../models/Person.models");
+const { getAllInformation, addNewInformation, deleteInformation } = require("../models/Person.models");
 const { cloudinary } = require("../cloudinary")
 
 const streamifier = require('streamifier')
@@ -55,4 +55,9 @@ async function httpGetAllInformation (req, res){
     return res.status(200).json(await getAllInformation()); 
 }
 
-module.exports = {httpGetAllInformation, httpAddInformation}
+async function httpDeleteInformation(req, res){
+    let data = await deleteInformation(Number(req.params.id))
+    return res.status(201).json(data)
+}
+
+module.exports = {httpGetAllInformation, httpAddInformation, httpDeleteInformation}

@@ -7,4 +7,13 @@ async function addNewInformation(details){
   return await Person.create(details)
 }
 
-module.exports = {getAllInformation, addNewInformation}
+async function deleteInformation(id){
+  
+  return await Person.destroy({
+    where:{
+      id: id
+    }
+  })
+}
+
+module.exports = {getAllInformation, addNewInformation, deleteInformation}

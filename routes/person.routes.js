@@ -1,5 +1,5 @@
 const express = require('express')
-const { httpGetAllInformation, httpAddInformation } = require('../controllers/person.controller')
+const { httpGetAllInformation, httpAddInformation, httpDeleteInformation } = require('../controllers/person.controller')
 const personRoutes = express.Router()
 const multer = require("multer")
 
@@ -16,6 +16,6 @@ const multer = require("multer")
 const fileUpload = multer()
 personRoutes.get('/',httpGetAllInformation)
 personRoutes.post('/add', fileUpload.single("file"),httpAddInformation)
-personRoutes.delete('/:id')
+personRoutes.delete('/:id', httpDeleteInformation)
 
 module.exports = personRoutes

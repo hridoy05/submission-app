@@ -5,6 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import dayjs from 'dayjs';
 const Home = () => {
@@ -14,6 +15,7 @@ const Home = () => {
         country:'',
         file:''
     })
+    const navigate = useNavigate()
     const [countries, setCountries] = useState([])
     const handleChange = (e)=> {
         setPerson({...person, [e.target.name]: e.target.value})
@@ -35,8 +37,8 @@ const Home = () => {
           formData.append(key, person[key]);
         });
       
-      let res = await axios.post('http://localhost:8000/person/add', formData)
-      console.log(res);
+      await axios.post('http://localhost:8000/person/add', formData)
+      navigate('/listing')
     }
     useEffect(()=> {
         getCountries()
@@ -51,7 +53,7 @@ const Home = () => {
     <Stack direction="column" alignItems="center" sx={{margin: "10px auto" }} gap={5}>
         <TextField id="outlined-basic" value={person.name} onChange={handleChange} name="name" label="name" variant="outlined" />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker inputFormat="MM/DD/YYYY"  label="Date Of Birth" value={dayjs(person.dob).format('DD/MM/YYYY')} onChange={changeDateHandler} renderInput={(params) => <TextField {...params} />}></DatePicker>
+            <DatePicker inputFormat="DD/MM/YYYY"  label="Date Of Birth" value={person.dob} onChange={changeDateHandler} renderInput={(params) => <TextField {...params} />}></DatePicker>
         </LocalizationProvider>
         <Autocomplete
       id="country-select-demo"
