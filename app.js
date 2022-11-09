@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json());
-app.use('/', personRoutes)
+app.use('/person', personRoutes)
 app.use('/countries', countryRoutes)
 
 module.exports = app;

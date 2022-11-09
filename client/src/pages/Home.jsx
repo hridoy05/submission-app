@@ -20,7 +20,6 @@ const Home = () => {
         setPerson({...person, [e.target.name]: e.target.value})
     }
     const changeDateHandler = (value)=> {
-        console.log(value);
         setPerson({...person,dob:value })
     }
     const handleCountryChange = (e,value)=> {
@@ -28,17 +27,17 @@ const Home = () => {
         setPerson({...person, country: value.country_name})
     }
     const changeFileHandler = (event)=> {
-        console.log(event.target.files[0]);
+        setPerson({...person, file:event.target.files[0]});
     }
-    const handleSubmit=(e)=> {
+    const handleSubmit=async (e)=> {
         e.preventDefault()
         const formData = new FormData();
-      Object.keys(person).forEach((key) => {
-        console.log(key);
-        formData.append(key, person[key]);
-      });
-    
-      console.log(Object.fromEntries(formData))
+        Object.keys(person).forEach((key) => {
+          formData.append(key, person[key]);
+        });
+      
+      let res = await axios.post('http://localhost:8000/person/add', formData)
+      console.log(res);
     }
     useEffect(()=> {
         getCountries()
@@ -51,11 +50,10 @@ const Home = () => {
     }
   return (
     <>
-    <form onSubmit={handleSubmit}>
     <Stack direction="column" alignItems="center" sx={{margin: "10px auto" }} gap={5}>
         <TextField id="outlined-basic" value={person.name} onChange={handleChange} name="name" label="name" variant="outlined" />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker inputFormat="MM/DD/YYYY"  label="Date Of Birth" value={person.dob} onChange={changeDateHandler} renderInput={(params) => <TextField {...params} />}></DatePicker>
+            <DatePicker inputFormat="MM/DD/YYYY"  label="Date Of Birth" value={dayjs(person.dob).format('DD/MM/YYYY')} onChange={changeDateHandler} renderInput={(params) => <TextField {...params} />}></DatePicker>
         </LocalizationProvider>
         <Autocomplete
       id="country-select-demo"
@@ -82,9 +80,8 @@ const Home = () => {
       )}
     />
         <input name="file"  onChange={changeFileHandler} accept="application/pdf" type="file"/>
-        <Button type="submit">Submit</Button>
+        <Button onClick={handleSubmit}>Submit</Button>
     </Stack>
-    </form>
     </>
   );
 };

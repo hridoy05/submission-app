@@ -3,4 +3,8 @@ async function getAllInformation() {
     return await Person.findAll()
   }
 
-module.exports = {getAllInformation}
+async function addNewInformation(details){
+  return await Person.create(details)
+}
+
+module.exports = {getAllInformation, addNewInformation}
