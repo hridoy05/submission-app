@@ -16,7 +16,6 @@ const Home = () => {
     })
     const [countries, setCountries] = useState([])
     const handleChange = (e)=> {
-        console.log([e.target.name], e.target.value);
         setPerson({...person, [e.target.name]: e.target.value})
     }
     const changeDateHandler = (value)=> {
@@ -44,7 +43,6 @@ const Home = () => {
     },[])
     async function getCountries (){
        const {data} =  await axios.get('http://localhost:8000/countries')
-       console.log(data);
        setCountries(data)
        
     }

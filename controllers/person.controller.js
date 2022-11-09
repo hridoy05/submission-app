@@ -1,7 +1,7 @@
 const { getAllInformation, addNewInformation } = require("../models/Person.models");
 const { cloudinary } = require("../cloudinary")
 
-
+const streamifier = require('streamifier')
 
 async function httpAddInformation(req, res){
     console.log("hit personpost");
@@ -13,41 +13,42 @@ async function httpAddInformation(req, res){
             error: 'Missing required person property',
           });
         }
-    try {
-        cloudinary.v2.uploader.upload(
-            req.file.path,
-            {
-              folder: "hridoy",
-              use_filename: true,
-              resource_type: "raw",
-            },
-            async (err, result) => {
-                console.log(result);
-              if (err) {
-                console.log(err);
-                res.status(500).json({ message: "Something went wrong" });
-              } else {
-                details = {
-                    name: req.body.name,
-                    dob: req.body.dob,
-                    country: req.body.country,
-                    resumeUrl: result.url
-                }
-               let information =  await addNewInformation(details)
-                
-                res.status(200).send({
-                  message: "Song added successfully",
-                  success: true,
-                  data: information,
-                });
-              }
-            }
-          );
+        let streamUpload = (req) => {
+            return new Promise((resolve, reject) => {
+                let stream = cloudinary.uploader.upload_stream(
+                  (error, result) => {
+                    if (result) {
+                      resolve(result);
+                    } else {
+                      reject(error);
+                    }
+                  }
+                );
+    
+              streamifier.createReadStream(req.file.buffer).pipe(stream);
+            });
+        };
+    
         
-    } catch (error) {
+    async function upload(req, res) {
+        let result = await streamUpload(req);
+       let details = {
+            name: req.body.name,
+            dob: req.body.dob,
+            country: req.body.country,
+            resumeUrl: result.url
+        }
+       let information =  await addNewInformation(details)
         
+        res.status(200).send({
+          message: "Song added successfully",
+          success: true,
+          data: information,
+        });
+        console.log(result);
     }
-    console.log(details);
+
+    upload(req, res);
 }
 
 async function httpGetAllInformation (req, res){
