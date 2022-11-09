@@ -15,6 +15,7 @@ const Home = () => {
         country:'',
         file:''
     })
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const [countries, setCountries] = useState([])
     const handleChange = (e)=> {
@@ -32,12 +33,14 @@ const Home = () => {
     }
     const handleSubmit=async (e)=> {
         e.preventDefault()
+        setLoading(true)
         const formData = new FormData();
         Object.keys(person).forEach((key) => {
           formData.append(key, person[key]);
         });
       
       await axios.post('http://localhost:8000/person/add', formData)
+      setLoading(false)
       navigate('/listing')
     }
     useEffect(()=> {
@@ -52,9 +55,11 @@ const Home = () => {
     <>
     <Stack direction="column" alignItems="center" sx={{margin: "10px auto" }} gap={5}>
         <TextField id="outlined-basic" value={person.name} onChange={handleChange} name="name" label="name" variant="outlined" />
+        {/* Date time picker */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker inputFormat="DD/MM/YYYY"  label="Date Of Birth" value={person.dob} onChange={changeDateHandler} renderInput={(params) => <TextField {...params} />}></DatePicker>
         </LocalizationProvider>
+        {/* Country auto complete */}
         <Autocomplete
       id="country-select-demo"
       sx={{ width: 300 }}
@@ -79,8 +84,9 @@ const Home = () => {
         />
       )}
     />
+          {/* File upload */}
         <input name="file"  onChange={changeFileHandler} accept="application/pdf" type="file"/>
-        <Button onClick={handleSubmit}>Submit</Button>
+        <Button variant="contained" disabled={loading} onClick={handleSubmit}>Submit</Button>
     </Stack>
     </>
   );

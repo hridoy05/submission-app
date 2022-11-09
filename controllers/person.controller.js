@@ -52,7 +52,14 @@ async function httpAddInformation(req, res){
 }
 
 async function httpGetAllInformation (req, res){
-    return res.status(200).json(await getAllInformation()); 
+    const {sort} = req.query
+    let data 
+    if(req.query){
+       data =  await getAllInformation(sort)
+    }else{
+        data =  await getAllInformation()
+    }
+    return res.status(200).json(data); 
 }
 
 async function httpDeleteInformation(req, res){
